@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MVC — Practice Question Bank</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,400&family=JetBrains+Mono:wght@400;600&display=swap');
+
+  :root {
+    --navy: #0a0f1e;
+    --navy2: #111827;
+    --panel: #141d2e;
+    --border: #1e2d45;
+    --teal: #00c2b3;
+    --gold: #f5c842;
+    --coral: #ff6b6b;
+    --lavender: #a78bfa;
+    --text: #e2e8f0;
+    --muted: #94a3b8;
+    --tag-bg: #1a2744;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--navy);
+    color: var(--text);
+    font-family: 'Source Serif 4', serif;
+    font-size: 15px;
+    line-height: 1.75;
+  }
+
+  /* NAV */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(10,15,30,0.97);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 24px;
+    display: flex; gap: 6px; flex-wrap: wrap; align-items: center;
+  }
+  nav span { color: var(--teal); font-family: 'JetBrains Mono', monospace; font-size: 12px; margin-right: 8px; }
+  nav a {
+    color: var(--muted); text-decoration: none;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    padding: 3px 10px; border-radius: 4px; border: 1px solid var(--border);
+    transition: all .2s;
+  }
+  nav a:hover { color: var(--teal); border-color: var(--teal); }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, #0a0f1e 0%, #0d1f3c 50%, #091520 100%);
+    border-bottom: 2px solid var(--teal);
+    padding: 48px 40px 36px;
+    text-align: center;
+  }
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.6rem; font-weight: 900;
+    color: var(--teal); letter-spacing: -1px;
+    margin-bottom: 8px;
+  }
+  header p { color: var(--muted); font-size: 14px; }
+  .badge-row { display: flex; gap: 10px; justify-content: center; margin-top: 14px; flex-wrap: wrap; }
+  .badge {
+    background: var(--tag-bg); border: 1px solid var(--border);
+    border-radius: 20px; padding: 4px 14px;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--gold);
+  }
+
+  /* MAIN */
+  main { max-width: 1000px; margin: 0 auto; padding: 40px 24px 80px; }
+
+  /* CHAPTER */
+  .chapter {
+    margin-bottom: 48px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .chapter-header {
+    background: var(--panel);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 24px;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .chapter-num {
+    background: var(--teal); color: var(--navy);
+    font-family: 'JetBrains Mono', monospace; font-weight: 600; font-size: 13px;
+    padding: 4px 12px; border-radius: 6px; white-space: nowrap;
+  }
+  .chapter-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem; font-weight: 700; color: var(--text);
+  }
+  .clo-tag {
+    margin-left: auto; background: var(--tag-bg);
+    border: 1px solid var(--lavender); color: var(--lavender);
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    padding: 3px 10px; border-radius: 4px; white-space: nowrap;
+  }
+
+  /* QUESTION */
+  .questions { padding: 20px 24px; display: flex; flex-direction: column; gap: 14px; }
+  .q {
+    background: var(--navy2); border-left: 3px solid var(--border);
+    border-radius: 0 6px 6px 0; padding: 14px 18px;
+    transition: border-color .2s;
+  }
+  .q:hover { border-left-color: var(--teal); }
+  .q-num {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: var(--teal); margin-bottom: 5px;
+  }
+  .q-text { color: var(--text); }
+  .q-text .math { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--gold); }
+  .diff {
+    display: inline-block; margin-top: 6px;
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    padding: 2px 8px; border-radius: 3px;
+  }
+  .easy { background: #14532d; color: #4ade80; }
+  .med  { background: #713f12; color: #fcd34d; }
+  .hard { background: #4c1d1d; color: #f87171; }
+
+  .section-label {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: var(--muted); text-transform: uppercase; letter-spacing: 1px;
+    padding: 8px 24px 4px; background: var(--navy);
+    border-top: 1px solid var(--border);
+  }
+
+  footer { text-align: center; color: var(--muted); font-size: 12px; padding: 20px; }
+</style>
+</head>
+<body>
+
+<nav>
+  <span>§ SECTIONS</span>
+  <a href="#s101">10.1</a><a href="#s102">10.2</a><a href="#s103">10.3</a>
+  <a href="#s104">10.4</a><a href="#s132">13.2</a><a href="#s141">14.1</a>
+  <a href="#s142">14.2</a><a href="#s143">14.3</a><a href="#s144">14.4</a>
+  <a href="#s145">14.5</a><a href="#s146">14.6</a><a href="#s147">14.7</a>
+  <a href="#s148">14.8</a><a href="#s151">15.1</a><a href="#s152">15.2</a>
+  <a href="#s156">15.6</a><a href="#s162">16.2</a><a href="#s164">16.4</a>
+  <a href="#s165">16.5</a>
+</nav>
+
+<header>
+  <h1>Multivariable Calculus — Practice Question Bank</h1>
+  <p>James Stewart · 9th Edition (Metric) &nbsp;|&nbsp; NUCES Karachi · Final Exam Preparation</p>
+  <div class="badge-row">
+    <span class="badge">19 Topics</span>
+    <span class="badge">CLO 1 · 2 · 3 · 4</span>
+    <span class="badge">100+ Questions</span>
+    <span class="badge">Easy / Med / Hard</span>
+  </div>
+</header>
+
+<main>
+
+<!-- ═══════════════════════ 10.1 ═══════════════════════ -->
+<div class="chapter" id="s101">
+  <div class="chapter-header">
+    <span class="chapter-num">§ 10.1</span>
+    <span class="chapter-title">Parametric Equations and Curves</span>
+    <span class="clo-tag">CLO 2</span>
+  </div>
+  <div class="questions">
+
+    <div class="q">
+      <div class="q-num">Q1</div>
+      <div class="q-text">Sketch the parametric curve <span class="math">x = 2t − 1, &nbsp; y = t² − t</span> by eliminating the parameter. Indicate the direction of motion as <span class="math">t</span> increases. <span class="diff easy">Easy</span></div>
+    </div>
+
+    <div class="q">
+      <div class="q-num">Q2</div>
+      <div class="q-text">A curve is given by <span class="math">x = cos²t, &nbsp; y = sin²t</span>. Eliminate the parameter and identify the curve. What portion of the Cartesian curve is traced? <span class="diff easy">Easy</span></div>
+    </div>
+
+    <div class="q">
+      <div class="q-num">Q3</div>
+      <div class="q-text">Find parametric equations for the line segment from <span class="math">(3, −2)</span> to <span class="math">(−1, 4)</span> with <span class="math">0 ≤ t ≤ 1</span>. <span class="diff easy">Easy</span></div>
+    </div>
+
+    <div class="q">
+      <div class="q-num">Q4</div>
+      <div class="q-text">The parametric equations <span class="math">x = a cosθ + h, &nbsp; y = b sinθ + k</span> represent an ellipse. Identify the center, semi-major and semi-minor axes, and the direction of traversal as <span class="math">θ: 0 → 2π</span>. <span class="diff med">Medium</span></div>
+    </div>
+
+    <div class="q">
+      <div class="q-num">Q5</div>
+      <div class="q-text">A cycloid is given by <span class="math">x = r(θ − sinθ), &nbsp; y = r(1 − cosθ)</span>. For <span class="math">r = 1</span>, find all points where the curve has a cusp (is not smooth), and sketch one arch of the cycloid. <span class="diff hard">Hard</span></div>
+    </div>
+
+    <div class="q">
+      <div class="q-num">Q6</div>
+      <div class="q-text">Two particles move so that <span class="math">P₁: x=t², y=t³</span> and <span class="math">P₂: x=t+2, y=t²−1</span>. Do the particles ever collide? Do their paths intersect? Justify your answer. <span class="diff hard">Hard</span></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════ 10.2 ═══════════════════════ -->
+<div class="chapter" id="s102">
+  <div class="chapter-header">
+    <span class="chapter-num">§ 10.2</span>
+    <span class="chapter-title">Calculus with Parametric Curves</span>
+    <span class="clo-tag">CLO 2</span>
+  </div>
+  <div class="questions">
+
+    <div class="q">
+      <div class="q-num">Q1</div>
+      <div class="q-text">Find <span class="math">dy/dx</span> for the curve <span class="math">x = t³ − 3t, &nbsp; y = t² + 2t</span>. Find all points where the tangent is horizontal or vertical. <span class="diff easy">Easy</span></div>
+    </div>
+
+    <div class="q">
+      <div class="q-num">Q2</div>
+      <div class="q-text">Find the equation of the tangent line to the curve <span class="math">x = e^t sinπt, &nbsp; y = e^t cosπt</span> at the point corresponding to <span class="math">t = 0</span>. <span class="diff med">Medium</span></div>
+    </div>
+
+    <div class="q">
+      <div class="q-num">Q3</div>
+      <div class="q-text">Find d²y/dx² for <span class="math">x = t − sin t, &nbsp; y = 1 − cos t</span> and determine where the curve is concave up. <span class="diff med">Medium</span></div>
+    </div>
+
+    <div class="q">
+      <div class="q-num">Q4</div>
+      <div class="q-text">Find the arc length of the curve <span class="math">x = 3t², &nbsp; y = 2t³</span> from <span class="math">t = 0</span> to <span class="math">t = 1</span>. <span class="diff med">Medium</span></div>
+    </div>
+
+    <div class="q">
+      <div class="q-num">Q5</div>
+      <div class="q-text">Find the area under one arch of the cycloid <span class="math">x = r(θ − sinθ), &nbsp; y = r(1 − cosθ)</span>. <span class="diff hard">Hard</span></div>
+    </div>
+
+    <div class="q">
+      <div class="q-num">Q6</div>
+      <div class="q-text">For the curve <span class="math">x = cos t, &nbsp; y = sin³t</span>, find the total arc length. <span class="diff hard">Hard</span></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════ 10.3 ═══════════════════════ -->
+<div class="chapter" id="s103">
+  <div class="chapter-header">
+    <span class="chapter-num">§ 10.3</span>
+    <span class="chapter-title">Polar Coordinates and Polar Curves</span>
+    <span class="clo-tag">CLO 2</span>
+  </div>
+  <div class="questions">
+
+    <div class="q">
+      <div class="q-num">Q1</div>
+      <div class="q-text">Convert <span class="math">(r, θ) = (4, 5π/6)</span> to Cartesian coordinates. <span class="diff easy">Easy</span></div>
+    </div>
+
+    <div class="q">
+      <div class="q-num">Q2</div>
+      <div class="q-text">Convert the Cartesian point <span class="math">(−3, 3)</span> to polar form <span class="math">(r, θ)</span> with <span class="math">r > 0</span> and <span class="math">0 ≤ θ < 2π</span>. <span class="diff easy">Easy</span></div>
+    </div>
+
+    <div class="q">
+      <div class="q-num">Q3</div>
+      <div class="q-text">Sketch the polar curve <span class="math">r = 1 + sinθ</span> (cardioid). Find all points where the curve passes through the origin. <span class="diff med">Medium</span></div>
+    </div>
+
+    <div class="q">
+      <div class="q-num">Q4</div>
+      <div class="q-text">Sketch and identify the curve <span class="math">r = 2cosθ</span>. Find its Cartesian equation. <span class="diff easy">Easy</span></div>
+    </div>
+
+    <div class="q">
+      <div class="q-num">Q5</div>
+      <div class="q-text">Find all intersection points of <span class="math">r = sinθ</span> and <span class="math">r = cosθ</span>. Sketch both curves. <span class="diff med">Medium</span></div>
+    </div>
+
+    <div class="q">
+      <div class="q-num">Q6</div>
+      <div class="q-text">Sketch the four-leaf rose <span class="math">r = cos2θ</span> and find the values of <span class="math">θ</span> at which the tips of the petals occur. <span class="diff med">Medium</span></div>
+    </div>
+
+    <div class="q">
+      <div class="q-num">Q7</div>
+      <div class="q-text">Identify and sketch the polar curve <span class="math">r = 3/(2 − cosθ)</span>. Determine the type of conic section and its eccentricity. <span class="diff hard">Hard</span></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════ 10.4 ═══════════════════════ -->
+<div class="chapter" id="s104">
+  <div class="chapter-header">
+    <span class="chapter-num">§ 10.4</span>
+    <span class="chapter-title">Calculus in Polar Coordinates</span>
+    <span class="clo-tag">CLO 2</span>
+  </div>
+  <div class="questions">
+
+    <div class="q">
+      <div class="q-num">Q1</div>
+      <div class="q-text">Find the area enclosed by the cardioid <span class="math">r = 1 + cosθ</span>. <span class="diff med">Medium</span></div>
+    </div>
+
+    <div class="q">
+      <div class="q-num">Q2</div>
+      <div class="q-text">Find the area of the region inside the circle <span class="math">r = 3sinθ</span> but outside the cardioid <span class="math">r = 1 + sinθ</span>. <span class="diff hard">Hard</span></div>
+    </div>
+
+    <div class="q">
+      <div class="q-num">Q3</div>
+      <div class="q-text">Find the slope of the tangent line to the curve <span class="math">r = 2sinθ</span> at <span class="math">θ = π/6</span>. <span class="diff med">Medium</span></div>
+    </div>
+
+    <div class="q">
+      <div class="q-num">Q4</div>
+      <div class="q-text">Find the arc length of the polar curve <span class="math">r = e^θ</span> for <span class="math">0 ≤ θ ≤ 2π</span>. <span class="diff med">Medium</span></div>
+    </div>
+
+    <div class="q">
+      <div class="q-num">Q5</div>
+      <div class="q-text">Find the area of one petal of the rose <span class="math">r = 4cos3θ</span>. <span class="diff med">Medium</span></div>
+    </div>
+
+    <div class="q">
+      <div class="q-num">Q6</div>
+      <div class="q-text">Find the area of the region shared by the two circles <span class="math">r = 2</span> and <span class="math">r = 4cosθ</span>. <span class="diff hard">Hard</span></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════ 13.2 ═══════════════════════ -->
+<div class="chapter" id="s132">
+  <div class="chapter-header">
+    <span class="chapter-num">§ 13.2</span>
+    <span class="chapter-title">Derivatives and Integrals of Vector Functions</span>
+    <span class="clo-tag">CLO 2</span>
+  </div>
+  <div class="questions">
+
+    <div class="q">
+      <div class="q-num">Q1</div>
+      <div class="q-text">Find the derivative of <span class="math">r(t) = ⟨t³, sin2t, e^(−t)⟩</span>. Find the unit tangent vector at <span class="math">t = 0</span>. <span class="diff easy">Easy</span></div>
+    </div>
+
+    <div class="q">
+      <div class="q-num">Q2</div>
+      <div class="q-text">Find the integral <span class="math">∫₀¹ ⟨te^t, t/√(1−t²), t²⟩ dt</span>. <span class="diff med">Medium</span></div>
+    </div>
+
+    <div class="q">
+      <div class="q-num">Q3</div>
+      <div class="q-text">A particle moves with velocity <span class="math">v(t) = ⟨2t, e^t, cos t⟩</span> and starts at position <span class="math">r(0) = ⟨1, 0, −1⟩</span>. Find the position function <span class="math">r(t)</span>. <span class="diff med">Medium</span></div>
+    </div>
+
+    <div class="q">
+      <div class="q-num">Q4</div>
+      <div class="q-text">Prove that if <span class="math">|r(t)| = c</span> (constant), then <span class="math">r(t) · r′(t) = 0</span> for all <span class="math">t</span>. <span class="diff hard">Hard</span></div>
+    </div>
+
+    <div class="q">
+      <div class="q-num">Q5</div>
+      <div class="q-text">Find <span class="math">d/dt [r(t) × r′(t)]</span> given that <span class="math">r(t) = ⟨t, t², t³⟩</span>. <span class="diff hard">Hard</span></div>
+    </div>
+
+    <div class="q">
+      <div class="q-num">Q6</div>
+      <div class="q-text">Find the arc length of the curve <span class="math">r(t) = ⟨√2 t, e^t, e^(−t)⟩</span> for <span class="math">0 ≤ t ≤ 1</span>. <span class="diff hard">Hard</span></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════ 14.1 ═══════════════════════ -->
+<div class="chapter" id="s141">
+  <div class="chapter-header">
+    <span class="chapter-num">§ 14.1</span>
+    <span class="chapter-title">Functions of Several Variables</span>
+    <span class="clo-tag">CLO 2</span>
+  </div>
+  <div class="questions">
+
+    <div class="q">
+      <div class="q-num">Q1</div>
+      <div class="q-text">Find the domain of <span class="math">f(x,y) = √(x+y) / (x − y)</span>. Sketch the domain in the <span class="math">xy</span>-plane. <span class="diff easy">Easy</span></div>
+    </div>
+
+    <div class="q">
+      <div class="q-num">Q2</div>
+      <div class="q-text">For <span class="math">f(x,y) = x² − 2xy + y²</span>, sketch the level curves for <span class="math">k = 0, 1, 4, 9</span>. <span class="diff easy">Easy</span></div>
+    </div>
+
+    <div class="q">
+      <div class="q-num">Q3</div>
+      <div class="q-text">Describe the level surfaces of <span class="math">f(x,y,z) = x² + y² + z²</span> and <span class="math">g(x,y,z) = x + 2y − 3z</span>. <span class="diff easy">Easy</span></div>
+    </div>
+
+    <div class="q">
+      <div class="q-num">Q4</div>
+      <div class="q-text">Find the range of <span class="math">f(x,y) = e^(x−y)</span>. Then find and sketch the level curves <span class="math">f = 1</span> and <span class="math">f = e</span>. <span class="diff med">Medium</span></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════ 14.2 ═══════════════════════ -->
+<div class="chapter" id="s142">
+  <div class="chapter-header">
+    <span class="chapter-num">§ 14.2</span>
+    <span class="chapter-title">Limits and Continuity</span>
+    <span class="clo-tag">CLO 2</span>
+  </div>
+  <div class="questions">
+
+    <div class="q">
+      <div class="q-num">Q1</div>
+      <div class="q-text">Evaluate <span class="math">lim(x,y)→(1,2) (x²y + 3y²)/(x + y)</span>. <span class="diff easy">Easy</span></div>
+    </div>
+
+    <div class="q">
+      <div class="q-num">Q2</div>
+      <div class="q-text">Show that <span class="math">lim(x,y)→(0,0) xy/(x² + y²)</span> does not exist by approaching along <span class="math">y = mx</span>. <span class="diff med">Medium</span></div>
+    </div>
+
+    <div class="q">
+      <div class="q-num">Q3</div>
+      <div class="q-text">Determine whether <span class="math">f(x,y) = x²y/(x⁴ + y²)</span> has a limit at the origin. Approach along <span class="math">y = x²</span> and <span class="math">y = 2x²</span>. <span class="diff hard">Hard</span></div>
+    </div>
+
+    <div class="q">
+      <div class="q-num">Q4</div>
+      <div class="q-text">Evaluate using substitution: <span class="math">lim(x,y)→(0,0) (sin(x² + y²))/(x² + y²)</span>. <span class="diff med">Medium</span></div>
+    </div>
+
+    <div class="q">
+      <div class="q-num">Q5</div>
+      <div class="q-text">Show <span class="math">lim(x,y)→(0,0) (x² − y²)/(x² + y²)</span> does not exist. Find the value of the limit along <span class="math">y=0</span>, <span class="math">x=0</span>, and <span class="math">y=x</span>. <span class="diff med">Medium</span></div>
+    </div>
+
+    <div class="q">
+      <div class="q-num">Q6</div>
+      <div class="q-text">Determine whether <span class="math">f(x,y) = (x³ + y³)/(x² + y²)</span> is continuous at the origin if we define <span class="math">f(0,0) = 0</span>. <span class="diff hard">Hard</span></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════ 14.3 ═══════════════════════ -->
+<div class="chapter" id="s143">
+  <div class="chapter-header">
+    <span class="chapter-num">§ 14.3</span>
+    <span class="chapter-title">Partial Derivatives</span>
+    <span class="clo-tag">CLO 1</span>
+  </div>
+  <div class="questions">
+
+    <div class="q">
+      <div class="q-num">Q1</div>
+      <div class="q-text">Find all first-order partial derivatives of <span class="math">f(x,y) = x³y² − 2x²y + xy³</span>. <span class="diff easy">Easy</span></div>
+    </div>
+
+    <div class="q">
+      <div class="q-num">Q2</div>
+      <div class="q-text">Find <span class="math">f_x, f_y, f_z</span> for <span class="math">f(x,y,z) = x² sin(yz) + ze^(xy)</span>. <span class="diff med">Medium</span></div>
+    </div>
+
+    <div class="q">
+      <div class="q-num">Q3</div>
+      <div class="q-text">Find all second-order partial derivatives of <span class="math">f(x,y) = x³ + x²y³ − 2y²</span> and verify Clairaut's theorem: <span class="math">f_xy = f_yx</span>. <span class="diff med">Medium</span></div>
+    </div>
+
+    <div class="q">
+      <div class="q-num">Q4</div>
+      <div class="q-text">Show that <span class="math">u = e^(−αk²t)sin(kx)</span> satisfies the heat equation <span class="math">∂u/∂t = α ∂²u/∂x²</span>. <span class="diff hard">Hard</span></div>
+    </div>
+
+    <div class="q">
+      <div class="q-num">Q5</div>
+      <div class="q-text">Find <span class="math">∂z/∂x</span> and <span class="math">∂z/∂y</span> implicitly from <span class="math">x² + y² + z² = 3xyz</span>. <span class="diff hard">Hard</span></div>
+    </div>
+
+    <div class="q">
+      <div class="q-num">Q6</div>
+      <div class="q-text">For <span class="math">f(x,y) = ln√(x² + y²)</span>, show that <span class="math">f_xx + f_yy = 0</span> (Laplace equation). <span class="diff med">Medium</span></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════ 14.4 ═══════════════════════ -->
+<div class="chapter" id="s144">
+  <div class="chapter-header">
+    <span class="chapter-num">§ 14.4</span>
+    <span class="chapter-title">Tangent Planes and Linear Approximation</span>
+    <span class="clo-tag">CLO 1</span>
+  </div>
+  <div class="questions">
+
+    <div class="q">
+      <div class="q-num">Q1</div>
+      <div class="q-text">Find the equation of the tangent plane to <span class="math">z = x² + y²</span> at <span class="math">(1, 2, 5)</span>. <span class="diff easy">Easy</span></div>
+    </div>
+
+    <div class="q">
+      <div class="q-num">Q2</div>
+      <div class="q-text">Find the tangent plane to <span class="math">z = e^x cos y</span> at <span class="math">(0, 0, 1)</span> and use it to approximate <span class="math">f(0.1, 0.05)</span>. <span class="diff med">Medium</span></div>
+    </div>
+
+    <div class="q">
+      <div class="q-num">Q3</div>
+      <div class="q-text">Find the linearization <span class="math">L(x,y)</span> of <span class="math">f(x,y) = √(20 − x² − 7y²)</span> at <span class="math">(2, 1)</span> and use it to approximate <span class="math">f(1.95, 1.02)</span>. <span class="diff med">Medium</span></div>
+    </div>
+
+    <div class="q">
+      <div class="q-num">Q4</div>
+      <div class="q-text">Use differentials to find the maximum percentage error in computing the volume of a cylinder <span class="math">V = πr²h</span> if <span class="math">r</span> and <span class="math">h</span> are each measured with error ≤ 1%. <span class="diff hard">Hard</span></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════ 14.5 ═══════════════════════ -->
+<div class="chapter" id="s145">
+  <div class="chapter-header">
+    <span class="chapter-num">§ 14.5</span>
+    <span class="chapter-title">The Chain Rule</span>
+    <span class="clo-tag">CLO 1 · 4</span>
+  </div>
+  <div class="questions">
+
+    <div class="q">
+      <div class="q-num">Q1</div>
+      <div class="q-text">If <span class="math">z = x²y + 3xy⁴</span>, <span class="math">x = sin2t</span>, <span class="math">y = cost</span>, find <span class="math">dz/dt</span> using the chain rule. <span class="diff easy">Easy</span></div>
+    </div>
+
+    <div class="q">
+      <div class="q-num">Q2</div>
+      <div class="q-text">If <span class="math">z = e^(x+2y)</span>, <span class="math">x = s/t</span>, <span class="math">y = t/s</span>, find <span class="math">∂z/∂s</span> and <span class="math">∂z/∂t</span>. <span class="diff med">Medium</span></div>
+    </div>
+
+    <div class="q">
+      <div class="q-num">Q3</div>
+      <div class="q-text">If <span class="math">F(x, y) = 0</span> defines <span class="math">y</span> implicitly as a function of <span class="math">x</span>, derive the formula <span class="math">dy/dx = −F_x/F_y</span> using the chain rule. Use this to find <span class="math">dy/dx</span> if <span class="math">x³ + y³ = 6xy</span>. <span class="diff hard">Hard</span></div>
+    </div>
+
+    <div class="q">
+      <div class="q-num">Q4</div>
+      <div class="q-text">The pressure <span class="math">P</span>, volume <span class="math">V</span>, and temperature <span class="math">T</span> of an ideal gas satisfy <span class="math">PV = nRT</span>. Show that <span class="math">(∂P/∂T)(∂T/∂V)(∂V/∂P) = −1</span>. <span class="diff hard">Hard</span></div>
+    </div>
+
+    <div class="q">
+      <div class="q-num">Q5</div>
+      <div class="q-text">If <span class="math">z = f(x − y, y − x)</span>, show that <span class="math">∂z/∂x + ∂z/∂y = 0</span>. <span class="diff hard">Hard</span></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════ 14.6 ═══════════════════════ -->
+<div class="chapter" id="s146">
+  <div class="chapter-header">
+    <span class="chapter-num">§ 14.6</span>
+    <span class="chapter-title">Directional Derivatives and Gradient Vector</span>
+    <span class="clo-tag">CLO 1 · 4</span>
+  </div>
+  <div class="questions">
+
+    <div class="q">
+      <div class="q-num">Q1</div>
+      <div class="q-text">Find the directional derivative of <span class="math">f(x,y) = x²y³ − 4y</span> at <span class="math">(2, −1)</span> in the direction of <span class="math">v = ⟨2, 5⟩</span>. <span class="diff easy">Easy</span></div>
+    </div>
+
+    <div class="q">
+      <div class="q-num">Q2</div>
+      <div class="q-text">Find the gradient of <span class="math">f(x,y,z) = x² + y² + z²</span> at <span class="math">(1, 1, 1)</span>. In what direction does <span class="math">f</span> increase most rapidly? What is the maximum rate of increase? <span class="diff easy">Easy</span></div>
+    </div>
+
+    <div class="q">
+      <div class="q-num">Q3</div>
+      <div class="q-text">Find the directional derivative of <span class="math">f(x,y,z) = xe^y + ye^z + ze^x</span> at <span class="math">(0, 0, 0)</span> in the direction toward <span class="math">(1, 2, 3)</span>. <span class="diff med">Medium</span></div>
+    </div>
+
+    <div class="q">
+      <div class="q-num">Q4</div>
+      <div class="q-text">The temperature at a point <span class="math">(x,y,z)</span> is <span class="math">T(x,y,z) = 200e^(−x²−3y²−9z²)</span>. A bug is at <span class="math">(1, 1, −1)</span>. In what direction should it move to cool off most quickly? <span class="diff med">Medium</span></div>
+    </div>
+
+    <div class="q">
+      <div class="q-num">Q5</div>
+      <div class="q-text">Find the maximum directional derivative of <span class="math">f(x,y) = sin(xy)</span> at <span class="math">(1, 0)</span> and the direction in which it occurs. <span class="diff med">Medium</span></div>
+    </div>
+
+    <div class="q">
+      <div class="q-num">Q6</div>
+      <div class="q-text">Show that the gradient of <span class="math">f(x,y,z) = x² + 2y² + 3z²</span> at any point <span class="math">(x₀, y₀, z₀)</span> is perpendicular to the level surface passing through that point. <span class="diff hard">Hard</span></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════ 14.7 ═══════════════════════ -->
+<div class="chapter" id="s147">
+  <div class="chapter-header">
+    <span class="chapter-num">§ 14.7</span>
+    <span class="chapter-title">Maximum and Minimum Values</span>
+    <span class="clo-tag">CLO 3 · 4</span>
+  </div>
+  <div class="questions">
+
+    <div class="q">
+      <div class="q-num">Q1</div>
+      <div class="q-text">Find all critical points of <span class="math">f(x,y) = x³ − 12xy + 8y³</span> and classify them using the second derivative test. <span class="diff med">Medium</span></div>
+    </div>
+
+    <div class="q">
+      <div class="q-num">Q2</div>
+      <div class="q-text">Find the absolute maximum and minimum values of <span class="math">f(x,y) = x² + xy + y² − 6x</span> on the closed triangular region with vertices <span class="math">(0,0), (6,0), (0,6)</span>. <span class="diff hard">Hard</span></div>
+    </div>
+
+    <div class="q">
+      <div class="q-num">Q3</div>
+      <div class="q-text">Find the point on the plane <span class="math">2x + y − z = 5</span> closest to the origin by minimizing the distance squared. <span class="diff med">Medium</span></div>
+    </div>
+
+    <div class="q">
+      <div class="q-num">Q4</div>
+      <div class="q-text">Find the dimensions of the rectangular box with largest volume whose surface area is <span class="math">24 cm²</span>. <span class="diff hard">Hard</span></div>
+    </div>
+
+    <div class="q">
+      <div class="q-num">Q5</div>
+      <div class="q-text">Classify the critical points of <span class="math">f(x,y) = 4 + x³ + y³ − 3xy</span>. <span class="diff med">Medium</span></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════ 14.8 ═══════════════════════ -->
+<div class="chapter" id="s148">
+  <div class="chapter-header">
+    <span class="chapter-num">§ 14.8</span>
+    <span class="chapter-title">Lagrange Multipliers</span>
+    <span class="clo-tag">CLO 3 · 4</span>
+  </div>
+  <div class="questions">
+
+    <div class="q">
+      <div class="q-num">Q1</div>
+      <div class="q-text">Use Lagrange multipliers to find the maximum and minimum values of <span class="math">f(x,y) = x² + y²</span> subject to <span class="math">x⁴ + y⁴ = 1</span>. <span class="diff med">Medium</span></div>
+    </div>
+
+    <div class="q">
+      <div class="q-num">Q2</div>
+      <div class="q-text">Find the maximum value of <span class="math">f(x,y,z) = xyz</span> subject to <span class="math">x + y + z = 12</span>, <span class="math">x, y, z > 0</span>. What does this tell us about the AM-GM inequality? <span class="diff hard">Hard</span></div>
+    </div>
+
+    <div class="q">
+      <div class="q-num">Q3</div>
+      <div class="q-text">Use Lagrange multipliers to find the minimum distance from the origin to the plane <span class="math">x + 2y − 2z = 5</span>. <span class="diff med">Medium</span></div>
+    </div>
+
+    <div class="q">
+      <div class="q-num">Q4</div>
+      <div class="q-text">A company produces <span class="math">x</span> units using two inputs <span class="math">K</span> (capital) and <span class="math">L</span> (labor) with production <span class="math">P(K,L) = K^(0.6) L^(0.4)</span>. Budget constraint: <span class="math">3K + 2L = 120</span>. Find the optimal allocation using Lagrange multipliers. <span class="diff hard">Hard</span></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════ 15.1 ═══════════════════════ -->
+<div class="chapter" id="s151">
+  <div class="chapter-header">
+    <span class="chapter-num">§ 15.1</span>
+    <span class="chapter-title">Double Integrals over Rectangles</span>
+    <span class="clo-tag">CLO 3 · 4</span>
+  </div>
+  <div class="questions">
+
+    <div class="q">
+      <div class="q-num">Q1</div>
+      <div class="q-text">Evaluate <span class="math">∬_R (x − 3y²) dA</span> where <span class="math">R = {(x,y) : 0 ≤ x ≤ 2, 1 ≤ y ≤ 2}</span>. <span class="diff easy">Easy</span></div>
+    </div>
+
+    <div class="q">
+      <div class="q-num">Q2</div>
+      <div class="q-text">Evaluate <span class="math">∫₀¹ ∫₀² (x + 2y) dx dy</span> and <span class="math">∫₀² ∫₀¹ (x + 2y) dy dx</span>. Verify Fubini's theorem. <span class="diff easy">Easy</span></div>
+    </div>
+
+    <div class="q">
+      <div class="q-num">Q3</div>
+      <div class="q-text">Evaluate <span class="math">∬_R xe^(xy) dA</span> where <span class="math">R = [0,2] × [0,3]</span>. Choose the order of integration wisely. <span class="diff hard">Hard</span></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════ 15.2 ═══════════════════════ -->
+<div class="chapter" id="s152">
+  <div class="chapter-header">
+    <span class="chapter-num">§ 15.2</span>
+    <span class="chapter-title">Double Integrals over General Regions</span>
+    <span class="clo-tag">CLO 3 · 4</span>
+  </div>
+  <div class="questions">
+
+    <div class="q">
+      <div class="q-num">Q1</div>
+      <div class="q-text">Evaluate <span class="math">∬_D (2x − y) dA</span> where <span class="math">D</span> is bounded by <span class="math">y = x²</span> and <span class="math">y = x + 2</span>. <span class="diff med">Medium</span></div>
+    </div>
+
+    <div class="q">
+      <div class="q-num">Q2</div>
+      <div class="q-text">Evaluate <span class="math">∫₀¹ ∫_x^√x xy dy dx</span>. <span class="diff easy">Easy</span></div>
+    </div>
+
+    <div class="q">
+      <div class="q-num">Q3</div>
+      <div class="q-text">Reverse the order of integration and evaluate: <span class="math">∫₀¹ ∫_y^1 e^(x²) dx dy</span>. <span class="diff hard">Hard</span></div>
+    </div>
+
+    <div class="q">
+      <div class="q-num">Q4</div>
+      <div class="q-text">Find the volume of the solid bounded by <span class="math">z = x + y</span>, the <span class="math">xy</span>-plane, and the region <span class="math">x² + y² ≤ 4</span> (use polar coordinates). <span class="diff hard">Hard</span></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════ 15.6 ═══════════════════════ -->
+<div class="chapter" id="s156">
+  <div class="chapter-header">
+    <span class="chapter-num">§ 15.6</span>
+    <span class="chapter-title">Triple Integrals</span>
+    <span class="clo-tag">CLO 3 · 4</span>
+  </div>
+  <div class="questions">
+
+    <div class="q">
+      <div class="q-num">Q1</div>
+      <div class="q-text">Evaluate <span class="math">∭_E 6xy dV</span> where <span class="math">E</span> is bounded by <span class="math">x = 0, x = 1, y = 0, y = x, z = 0, z = x+y</span>. <span class="diff med">Medium</span></div>
+    </div>
+
+    <div class="q">
+      <div class="q-num">Q2</div>
+      <div class="q-text">Evaluate <span class="math">∭_E (x² + y²) dV</span> where <span class="math">E</span> is the solid tetrahedron with vertices <span class="math">(0,0,0), (1,0,0), (0,1,0), (0,0,1)</span>. <span class="diff hard">Hard</span></div>
+    </div>
+
+    <div class="q">
+      <div class="q-num">Q3</div>
+      <div class="q-text">Find the volume of the solid enclosed by the paraboloid <span class="math">z = x² + y²</span> and the plane <span class="math">z = 4</span> using a triple integral. <span class="diff med">Medium</span></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════ 16.2 ═══════════════════════ -->
+<div class="chapter" id="s162">
+  <div class="chapter-header">
+    <span class="chapter-num">§ 16.2</span>
+    <span class="chapter-title">Line Integrals</span>
+    <span class="clo-tag">CLO 3 · 4</span>
+  </div>
+  <div class="questions">
+
+    <div class="q">
+      <div class="q-num">Q1</div>
+      <div class="q-text">Evaluate <span class="math">∫_C xy ds</span> where <span class="math">C</span> is the upper half of the circle <span class="math">x² + y² = 4</span> from <span class="math">(2, 0)</span> to <span class="math">(−2, 0)</span>. <span class="diff med">Medium</span></div>
+    </div>
+
+    <div class="q">
+      <div class="q-num">Q2</div>
+      <div class="q-text">Evaluate <span class="math">∫_C F · dr</span> where <span class="math">F = ⟨xy, y²⟩</span> and <span class="math">C</span> is the parabola <span class="math">x = t, y = t²</span> from <span class="math">t = 0</span> to <span class="math">t = 1</span>. <span class="diff med">Medium</span></div>
+    </div>
+
+    <div class="q">
+      <div class="q-num">Q3</div>
+      <div class="q-text">Find the work done by <span class="math">F(x,y,z) = ⟨x, y, z⟩</span> along the helix <span class="math">r(t) = ⟨cos t, sin t, t⟩</span> from <span class="math">t = 0</span> to <span class="math">t = 2π</span>. <span class="diff med">Medium</span></div>
+    </div>
+
+    <div class="q">
+      <div class="q-num">Q4</div>
+      <div class="q-text">Evaluate <span class="math">∫_C (x + y) dx + (x − y) dy</span> along the line segment from <span class="math">(0,0)</span> to <span class="math">(2,4)</span>, and then along the parabola <span class="math">y = x²</span> from <span class="math">(0,0)</span> to <span class="math">(2,4)</span>. Are they equal? <span class="diff hard">Hard</span></div>
+    </div>
+
+    <div class="q">
+      <div class="q-num">Q5</div>
+      <div class="q-text">A wire has the shape of the quarter-circle <span class="math">x² + y² = 4, x ≥ 0, y ≥ 0</span>. The linear density is <span class="math">ρ(x,y) = x + y</span>. Find the mass of the wire. <span class="diff hard">Hard</span></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════ 16.4 ═══════════════════════ -->
+<div class="chapter" id="s164">
+  <div class="chapter-header">
+    <span class="chapter-num">§ 16.4</span>
+    <span class="chapter-title">Green's Theorem</span>
+    <span class="clo-tag">CLO 3 · 4</span>
+  </div>
+  <div class="questions">
+
+    <div class="q">
+      <div class="q-num">Q1</div>
+      <div class="q-text">Use Green's theorem to evaluate <span class="math">∮_C (y² dx + x² dy)</span> where <span class="math">C</span> is the rectangle with vertices <span class="math">(0,0), (2,0), (2,3), (0,3)</span> traversed counterclockwise. <span class="diff easy">Easy</span></div>
+    </div>
+
+    <div class="q">
+      <div class="q-num">Q2</div>
+      <div class="q-text">Use Green's theorem to find the area enclosed by the ellipse <span class="math">x²/a² + y²/b² = 1</span>. <span class="diff med">Medium</span></div>
+    </div>
+
+    <div class="q">
+      <div class="q-num">Q3</div>
+      <div class="q-text">Verify Green's theorem for <span class="math">F = ⟨xy, x²⟩</span> on the region bounded by <span class="math">y = x</span> and <span class="math">y = x²</span>. <span class="diff hard">Hard</span></div>
+    </div>
+
+    <div class="q">
+      <div class="q-num">Q4</div>
+      <div class="q-text">Use Green's theorem to evaluate <span class="math">∮_C (e^x sin y dx + e^x cos y dy)</span> where <span class="math">C</span> is the rectangle <span class="math">[0,π] × [0,1]</span>. <span class="diff hard">Hard</span></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════ 16.5 ═══════════════════════ -->
+<div class="chapter" id="s165">
+  <div class="chapter-header">
+    <span class="chapter-num">§ 16.5</span>
+    <span class="chapter-title">Curl and Divergence</span>
+    <span class="clo-tag">CLO 3 · 4</span>
+  </div>
+  <div class="questions">
+
+    <div class="q">
+      <div class="q-num">Q1</div>
+      <div class="q-text">Find the curl and divergence of <span class="math">F(x,y,z) = ⟨xyz, y²z, xz²⟩</span>. <span class="diff easy">Easy</span></div>
+    </div>
+
+    <div class="q">
+      <div class="q-num">Q2</div>
+      <div class="q-text">Determine whether <span class="math">F = ⟨e^x cosyz, xe^x cosyz, −yze^x sinyz⟩</span> is conservative. If so, find a potential function. <span class="diff hard">Hard</span></div>
+    </div>
+
+    <div class="q">
+      <div class="q-num">Q3</div>
+      <div class="q-text">Show that <span class="math">F = ⟨y² + z², 2xy, 2xz⟩</span> is conservative and find a potential function <span class="math">f</span> such that <span class="math">∇f = F</span>. Use this to evaluate <span class="math">∫_C F · dr</span> from <span class="math">(1, 0, 0)</span> to <span class="math">(0, 1, 1)</span>. <span class="diff hard">Hard</span></div>
+    </div>
+
+    <div class="q">
+      <div class="q-num">Q4</div>
+      <div class="q-text">Find div(curl F) for any vector field <span class="math">F</span> with continuous second partials. What does this tell you about the relationship between curl and divergence? <span class="diff med">Medium</span></div>
+    </div>
+
+    <div class="q">
+      <div class="q-num">Q5</div>
+      <div class="q-text">Compute the curl of <span class="math">F = ∇f</span> where <span class="math">f(x,y,z) = x² + 2y² + 3z²</span>. Interpret the result. <span class="diff easy">Easy</span></div>
+    </div>
+
+  </div>
+</div>
+
+</main>
+<footer>NUCES Karachi &nbsp;|&nbsp; MVC Final Exam Preparation &nbsp;|&nbsp; Multivariable Calculus — Stewart 9e</footer>
+</body>
+</html>
